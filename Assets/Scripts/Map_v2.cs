@@ -58,6 +58,7 @@ public class Map_v2 : MonoBehaviour
     {
         divideRoom();
         MakeRoom();
+        MakeAdjacent();
         // CreatRoom();
     }
     public void divideRoom(){
@@ -105,7 +106,6 @@ public class Map_v2 : MonoBehaviour
             test_a2 += "\n";             
         }
         DebugRealms(realms);
-        Debug.Log("分割数=" + realms.Count);    
     }
     private List<Realm> RemoveRealms(List<Realm> _realms, int _removeId = 0){
         List<Realm> new_realms = new List<Realm>();
@@ -175,11 +175,11 @@ public class Map_v2 : MonoBehaviour
         Realm r = getRealmFromId(realms,id);
 
         if (r.sizeY * (int)Math.Floor((double)r.sizeX / 2) < minArea) {
-            Debug.Log("分割できる領域が"+minArea+"未満です。サイズ="+r.sizeY * (int)Math.Floor((double)r.sizeX / 2));
+            Debug.LogError("分割できる領域が"+minArea+"未満です。サイズ="+r.sizeY * (int)Math.Floor((double)r.sizeX / 2));
             return false;
         }
         if((int)Math.Floor((double)r.sizeX / 2) <= minWidth){
-            Debug.Log("sizeXが小さすぎます。sizeX="+r.sizeX);
+            Debug.LogError("sizeXが小さすぎます。sizeX="+r.sizeX);
             return false;
         }
 
@@ -222,11 +222,11 @@ public class Map_v2 : MonoBehaviour
         Realm r = getRealmFromId(realms,id);
 
         if (r.sizeY * (int)Math.Floor((double)r.sizeY / 2) < minArea) {
-            Debug.Log("分割できる領域が"+minArea+"未満です。サイズ="+r.sizeY * (int)Math.Floor((double)r.sizeX / 2));
+            Debug.LogError("分割できる領域が"+minArea+"未満です。サイズ="+r.sizeY * (int)Math.Floor((double)r.sizeX / 2));
             return false;
         }
         if((int)Math.Floor((double)r.sizeY / 2) <= minHeight){
-            Debug.Log("sizeYが小さすぎます。sizeY="+r.sizeY);
+            Debug.LogError("sizeYが小さすぎます。sizeY="+r.sizeY);
             return false;
         }
 
@@ -350,20 +350,20 @@ public class Map_v2 : MonoBehaviour
                 System.Random randomTop = new System.Random();
 
                 int StartTop = (int)(randomTop.Next(0, r.sizeY - margin * 2- rHeight + 1)) + r.top + margin;
-
-                Debug.Log("ベース部屋サイズ="+max_room_size+"/部屋サイズ="+ rWidth * rHeight);
-                Debug.Log("/r.sizeX=" + r.sizeX + "/r.sizeY=" + r.sizeY+"/rWidth="+rWidth+"/rHeight="+rHeight);
-                Debug.Log("r.left="+r.left+"/r.top="+r.top+"/StartLeft=" + StartLeft + "/StartTop=" + StartTop);
-                Debug.Log("_minusWidth=" + _minusWidth + "/_minusHeight=" + _minusHeight);
-
                 r.setRoom(StartLeft, StartTop, StartLeft + rWidth, StartTop + rHeight);
 
             }
         }
         CreatRoom();
     }
+    public void MakeAdjacent(){
+        for (int i = 0; i < realms.Count; i++)
+        {
+            Realm r = realms[i];
+            r.adjacentIDs = getAdjacentRealmIdList(r.id);
+        }
+    }
     private void CreatRoom(){
-        Debug.Log("realms.Count" + realms.Count);     
         //一旦子要素は全て削除
         for (int i = parentFloor.childCount - 1; i >= 0; i--)
         {
@@ -371,11 +371,6 @@ public class Map_v2 : MonoBehaviour
             Destroy(child.gameObject);
         }   
         foreach(Realm _r in realms){
-            // int x = _r.RoomLeft;
-            // int y = _r.RoomTop;
-            // Debug.Log("x=" + x + "/y=" + y);
-            Debug.Log("RoomLeft=" + _r.RoomLeft + "/RoomTop=" + _r.RoomTop + "/RoomRight=" + _r.RoomRight + "/RoomBottom=" + _r.RoomBottom);
-
             for (int y = _r.RoomTop; y < _r.RoomBottom; y++){
                 for (int x = _r.RoomLeft; x < _r.RoomRight; x++)
                 {
@@ -390,8 +385,83 @@ public class Map_v2 : MonoBehaviour
         // test_creat_count++;
         // test_a1 += "1,";       
     }
+    /** その領域に接している他の領域のIDを全て取得する. 
+    * 
+    * @param	index	取得したい領域のインデックス
+    * @return		    接している領域のIDを含む配列
+    * 
+    **/
+    private List<int> getAdjacentRealmIdList(int index) {
+        Debug.Log("getAdjacentRealmIdList");
+        int i;        
+        List<int> result = new List<int>();
+        List<int> touchingRealms = getAdjacentRealmIndices(index);
+        for (i = 0; i < touchingRealms.Count; i += 1) {
 
+            result.Add(realms[touchingRealms[i]].id);
+            Debug.Log("index="+index+"/id="+realms[touchingRealms[i]].id);
 
+        }
+        
+        return result;
+
+    }
+    /** その領域に接している他の領域のインデックスを全て取得する. 
+    * 
+    * @param	index	接しているかどうかを調べたい領域のインデックス
+    * @return			接している領域のインデックスを含む配列
+    * 
+    **/
+    private List<int> getAdjacentRealmIndices(int index) {
+
+        int i = 0;
+        List<int> touchingRealms = new List<int>();
+        Realm target;
+
+        // touchingRealms = [];
+        target = getRealmFromId(realms,index);
+
+        for (i = 0; i < realms.Count; i += 1) {
+
+            if (index != i) {
+
+                if (isAdjacent(target, realms[i])) {
+                    touchingRealms.Add(i);
+                }
+
+            }
+
+        }
+
+        return touchingRealms;
+
+    }
+     /** 領域Aと領域Bが接しているかどうかを調べる.
+     * 
+     * @param   realmA	領域A
+     * @param   realmB	領域B
+     * @return          領域A、Bが接しているか否かを示す真偽値
+     * 
+     **/
+    private bool isAdjacent (Realm realmA, Realm realmB) {
+        
+        if ((realmA.left == realmB.right + 1) || (realmB.left == realmA.right + 1)) {
+
+            if ((realmA.top <= realmB.bottom) && (realmA.top >= realmB.top)) {      return true; }
+            if ((realmA.bottom >= realmB.top) && (realmA.bottom <= realmB.bottom)) {return true; }
+
+        }
+
+        if ((realmA.top == realmB.bottom + 1) || (realmB.top == realmA.bottom + 1)) {
+
+            if ((realmA.left >= realmB.left) && (realmA.left <= realmB.right)) {    return true; }
+            if ((realmA.right >= realmB.left) && (realmA.right <= realmB.right)) {	return true; }
+
+        }
+
+        return false;
+
+    }
 }
 public class Realm
 {
@@ -400,19 +470,24 @@ public class Realm
     public int sizeY= 0;
     public int left = 0;
     public int top = 0;
+    public int right = 0;
+    public int bottom = 0;
     public int id = 0;
     public int RoomLeft = 0;
     public int RoomRight = 0;
     public int RoomTop = 0;
     public int RoomBottom = 0;
+    public List<int> connectID = new List<int>();//接続ID
+    public List<int> adjacentIDs = new List<int>();//隣接ID
 
-    // public int R_Y = 0;
     public Realm(int _left, int _top, int _sizeX,int _sizeY)
     {
         this.left = _left;
         this.top = _top;
         this.sizeX = _sizeX;
         this.sizeY = _sizeY;
+		this.right = _left + _sizeX - 1;
+		this.bottom = _top + _sizeY - 1;        
         
     }
     //コンストラクタが呼び出し初期化
