@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 5153603077373380632}
   - component: {fileID: 3086289685141195521}
   - component: {fileID: 5404649853561085790}
+  - component: {fileID: 7412829423404107069}
   m_Layer: 0
-  m_Name: Wall
+  m_Name: RoadArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,3 +98,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   X: 0
   Y: 0
+--- !u!114 &7412829423404107069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2766636796917584829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 418631d45c7de4988bd414674e67d087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  fromId: 0
+  toId: 0
+  startX: 0
+  startY: 0
+  middle: 0
+  endX: 0
+  endY: 0
+  direction: 0

@@ -34,7 +34,6 @@ public class SceneInitializer : MonoBehaviour {
 			}
 			log += "\n";
 		}
-		Debug.Log(log);
 
 		floorPrefab = Resources.Load("Prefabs/Floor") as GameObject;
 		wallPrefab = Resources.Load("Prefabs/Wall") as GameObject;

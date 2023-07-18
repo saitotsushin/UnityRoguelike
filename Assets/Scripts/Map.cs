@@ -23,7 +23,6 @@ public class Map: MonoBehaviour
     private void GenerateMap()
     {
         map = GenerateMap(MAP_SIZE_X,MAP_SIZE_Y);
-        Debug.Log("GenerateMap");
 		floorPrefab = Resources.Load("Prefabs/Floor") as GameObject;
 		wallPrefab = Resources.Load("Prefabs/Wall") as GameObject;
 
