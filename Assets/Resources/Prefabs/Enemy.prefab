@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5153603077373380632}
   - component: {fileID: 3086289685141195521}
-  - component: {fileID: 5404649853561085790}
-  - component: {fileID: 7412829423404107069}
+  - component: {fileID: -6577059588382072660}
+  - component: {fileID: 1490639624704034942}
   m_Layer: 0
-  m_Name: RoadArea
-  m_TagString: Untagged
+  m_Name: Enemy
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -40,7 +40,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2766636796917584829}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 1}
+  m_Color: {r: 0, g: 0.48289767, b: 0.8584906, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5404649853561085790
+--- !u!114 &-6577059588382072660
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,12 +93,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2766636796917584829}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 634c3bc0b96a44f7d98a2d71025b8ce7, type: 3}
+  m_Script: {fileID: 11500000, guid: 706befe87588d4834a794843c5e990f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  X: 0
-  Y: 0
---- !u!114 &7412829423404107069
+  _speed: 5
+  Pos: {x: 0, y: 0}
+  IsSetup: 0
+--- !u!114 &1490639624704034942
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,15 +108,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2766636796917584829}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 418631d45c7de4988bd414674e67d087, type: 3}
+  m_Script: {fileID: 11500000, guid: 043a0b8a1c73c461a8139ded14bf86d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
-  fromId: 0
-  toId: 0
-  startX: 0
-  startY: 0
-  middle: 0
-  endX: 0
-  endY: 0
-  direction: 0
+  _speed: 5
+  Pos: {x: 0, y: 0}
+  IsSetup: 0

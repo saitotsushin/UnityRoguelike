@@ -15,6 +15,8 @@ public class GManger : MonoBehaviour
         _Player = _player.GetComponent<Player>();
         Realm _StartRealm = _Map.GetRandomRealm();
         _Player.SetStart(_StartRealm);
+        FollowCamera.instance.SetCameta();
+        EnemyManager.instance.CreateEnemy();
 
     }
 
