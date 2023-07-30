@@ -772,7 +772,6 @@ public class Map : MonoBehaviour
 
     }
     public bool CheckWall(Vector2Int _NextPos,Vector2Int _NowPos){
-        // Debug.Log("CheckWall x="+_x + "/y=" + _y);
         if(floorMap[_NowPos.y,_NextPos.x] == 0 ||
            floorMap[_NextPos.y,_NowPos.x] == 0 ||
            floorMap[_NextPos.y,_NextPos.x] == 0){

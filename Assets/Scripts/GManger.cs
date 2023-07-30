@@ -2,12 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GameState
+{
+    // 開始
+    KeyInput, // キー入力待ち＝プレイヤーターン開始
+    PlayerTurn, //プレイヤーの行動中
+    EnemyBegin, // エネミーターン開始
+    EnemyTurn, //エネミーの行動中
+    TurnEnd,   // ターン終了→KeyInputへ変遷
+}
 public class GManger : MonoBehaviour
 {
+    public static GManger instance; // インスタンスの定義
     public Map _Map;
     public GameObject PlayerPrefab;
     public Player _Player;
-    // Start is called before the first frame update
+    public GameState CurrentGameState; //現在のゲーム状態
+    void Awake()
+    {
+        // シングルトンの呪文
+        if (instance == null)
+        {
+            // 自身をインスタンスとする
+            instance = this;
+        }
+        else
+        {
+            // インスタンスが複数存在しないように、既に存在していたら自身を消去する
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         _Map.GenerateMap();
@@ -20,9 +44,36 @@ public class GManger : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
+    //現在のゲームステータスを変更する関数　外部及び内部から
+    public void SetCurrentState(GameState state)
     {
+        CurrentGameState = state;
+        OnGameStateChanged(CurrentGameState);
+    }
+void OnGameStateChanged(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.KeyInput:
+                break;
 
+            case GameState.PlayerTurn:
+                // StartCoroutine("PlayerTurn");
+                break;
+
+            case GameState.EnemyBegin:
+                EnemyManager.instance.EnemyActions();
+                SetCurrentState(GameState.EnemyTurn);
+                break;
+
+            case GameState.EnemyTurn:
+                EnemyManager.instance.ExecActions();
+                // StartCoroutine("EnemyTurn");
+                break;
+
+            case GameState.TurnEnd:
+                SetCurrentState(GameState.KeyInput);
+                break;
+        }
     }
 }
