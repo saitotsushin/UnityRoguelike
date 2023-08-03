@@ -66,14 +66,17 @@ public class EnemyManager : MonoBehaviour
         }
         return false;        
     }
-    public bool IsDirectionToEnemy(Vector2Int _Pos,Vector2Int _DirectionPos){
-        Vector2Int _CheckPos = new Vector2Int(_Pos.x + _DirectionPos.x, _Pos.x + _DirectionPos.y);
+    public (Enemy TargetEnemy, bool IsExist) GetDirectionToEnemy(Vector2Int _Pos,Vector2Int _DirectionPos){
+        Enemy _Enemy = new Enemy();
+        bool _IsExist = false;
+        Vector2Int _CheckPos = new Vector2Int(_Pos.x + _DirectionPos.x, _Pos.y + _DirectionPos.y);
         foreach(Enemy _e in EnemyList){
             if(_e.Pos.x == _CheckPos.x && _e.Pos.y == _CheckPos.y){
-                return true;
+                _Enemy = _e;
+                _IsExist = true;
             }
         }        
-        return false;
+        return (_Enemy, _IsExist);
     }
 
     public void UpdateEnemyState(){

@@ -565,7 +565,7 @@ public class Map : MonoBehaviour
         return maxIndex;
 
     }
-    private Realm getRealmFromId(List<Realm> _realms, int _id)
+    public Realm getRealmFromId(List<Realm> _realms, int _id)
     {
         // int GetId = 0;
         Realm _RectBox = null;

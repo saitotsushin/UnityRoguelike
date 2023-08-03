@@ -30,7 +30,7 @@ public class Enemy : Player
         Vector2Int _ToPos = GetPosFromDirction(result.PlayerDirection);
 
         if(result.CanAttack){
-            Attack(Pos,_ToPos);
+            Attack(_Player);
         }else if (isChase)
         {
             Vector2Int MovePos = ChasePlayer();

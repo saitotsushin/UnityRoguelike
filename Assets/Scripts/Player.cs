@@ -24,6 +24,13 @@ public class Player : MonoBehaviour
 
     public DIRECTION dir =  DIRECTION.BOTTOM;
     public int roomId = 0;
+    public int HP = 1;
+    public int AK = 1;
+    public int DF = 1;
+    public bool IsAlive = true;
+
+    public List<Player> TargetEnemyList = new List<Player>();
+
     // public bool IsActed = false;
 
     void Start()
@@ -58,8 +65,12 @@ public class Player : MonoBehaviour
         {
             GManger.instance.SetCurrentState(GameState.PlayerTurn);
             Vector2Int _ToPos = GetPosFromDirction(dir);
-            bool isDirectionToEnemy = EnemyManager.instance.IsDirectionToEnemy(Pos,_ToPos);
-            Attack(Pos,_ToPos);
+            var result = EnemyManager.instance.GetDirectionToEnemy(Pos,_ToPos);
+            Debug.Log("result.IsExist=" + result.IsExist);
+            if(result.IsExist){
+                Attack(result.TargetEnemy);
+                return;
+            }
         }
         if(isWall || isEnemy){
             return;
@@ -85,7 +96,13 @@ public class Player : MonoBehaviour
             Move(checkTargetPos);
         }
     }
-    public void Attack(Vector2Int _FromPos,Vector2Int _ToPos){
+    public void Attack(Player _Enemy){
+
+        TargetEnemyList.Add(_Enemy);
+
+        Vector2Int _FromPos = Pos;
+        Vector2Int _ToPos = _Enemy.Pos;
+
         Debug.Log(gameObject.name+"...Attack");
         FollowCamera.instance.RemoveFollowCamera();
         Vector2 AttackPos = new Vector2(
@@ -100,6 +117,13 @@ public class Player : MonoBehaviour
             // "easeType", iTween.EaseType.linear,
             "oncomplete", "OnCompleteAttackFrom"
         ));
+
+        /*攻撃計算*/
+        int Damage = _Enemy.DF - AK;
+        if(Damage <= 0){
+            Damage = 1;
+        }
+        _Enemy.HP -= Damage;
     }
     public void OnCompleteAttackFrom()
     {
@@ -115,6 +139,13 @@ public class Player : MonoBehaviour
         }
         if(GManger.instance.CurrentGameState == GameState.EnemyTurn){
             EnemyManager.instance.EndAction();
+        }
+        if(TargetEnemyList.Count > 0){
+            foreach(Player _e in TargetEnemyList){
+                if(_e.HP <= 0){
+                    _e.Dead();
+                }
+            }
         }
     }
     public void OnCompleteAttackTo(){
@@ -165,6 +196,10 @@ public class Player : MonoBehaviour
         Pos.x = targetPosition.x;
         Pos.y = targetPosition.y;
 
+    }
+    public void Dead(){
+        IsAlive = false;
+        Destroy(this.gameObject);
     }
     public void OnCompleteMove(){
         if(GManger.instance.CurrentGameState == GameState.PlayerTurn){

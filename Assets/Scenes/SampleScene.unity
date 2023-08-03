@@ -257,6 +257,7 @@ MonoBehaviour:
   _Map: {fileID: 256474061}
   PlayerPrefab: {fileID: 2766636796917584829, guid: 7717e88270f4f4be1b672419cbb69265, type: 3}
   _Player: {fileID: 0}
+  CurrentGameState: 0
 --- !u!4 &134934454
 Transform:
   m_ObjectHideFlags: 0
@@ -404,6 +405,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 155623642}
   m_CullTransparentMesh: 1
+--- !u!1 &197997118
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 197997120}
+  - component: {fileID: 197997119}
+  m_Layer: 0
+  m_Name: Goal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &197997119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197997118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948bdd0ea2208482c98d77ba6bfe1ed1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Player: {fileID: 0}
+  GoalPrefab: {fileID: 2766636796917584829, guid: c35789ed3d4ef46b0a89cfff91a1f396, type: 3}
+--- !u!4 &197997120
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197997118}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.712181, y: 5.478508, z: -186.12912}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &256474058
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,9 +805,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1227faf9326242b98f56fc5162781e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
-  floorPrefab: {fileID: 0}
-  wallPrefab: {fileID: 0}
 --- !u!4 &1101804870
 Transform:
   m_ObjectHideFlags: 0
@@ -806,7 +849,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyPrefab: {fileID: 2766636796917584829, guid: 82acbc71faba646ea99e1e7f4d78c8ab, type: 3}
+  _Player: {fileID: 0}
   EnemyList: []
+  ActionCount: 0
 --- !u!4 &1342170912
 Transform:
   m_ObjectHideFlags: 0

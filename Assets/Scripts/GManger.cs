@@ -41,6 +41,7 @@ public class GManger : MonoBehaviour
         _Player.SetStart(_StartRealm);
         FollowCamera.instance.SetCameta();
         EnemyManager.instance.CreateEnemy();
+        Goal.instance.CreateGoal();
 
     }
 
@@ -50,7 +51,7 @@ public class GManger : MonoBehaviour
         CurrentGameState = state;
         OnGameStateChanged(CurrentGameState);
     }
-void OnGameStateChanged(GameState state)
+    void OnGameStateChanged(GameState state)
     {
         switch (state)
         {
