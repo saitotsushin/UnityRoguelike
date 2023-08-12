@@ -10,6 +10,7 @@ public class EnemyManager : MonoBehaviour
     public Player _Player;
 
     public List<Enemy> EnemyList;
+    public Transform parentLayer;
     public int ActionCount = 0;
     // デリゲートの定義
     public delegate void MyFunctionDelegate();
@@ -41,6 +42,10 @@ public class EnemyManager : MonoBehaviour
         
     }
     public void CreateEnemy(){
+        foreach(Enemy _e in EnemyList){
+            Destroy(_e.gameObject);
+        }
+        EnemyList = new List<Enemy>();
         _Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         List<Realm> _realms = Map.instance.realms;
         foreach(Realm _r in _realms){
@@ -50,7 +55,7 @@ public class EnemyManager : MonoBehaviour
                 continue;
             }
             Vector3 _Pos = new Vector3(_x, _y, 0);
-            GameObject m_Enemy = Instantiate(EnemyPrefab, _Pos, new Quaternion());
+            GameObject m_Enemy = Instantiate(EnemyPrefab, _Pos, new Quaternion(),parentLayer);
             Enemy _Enemy = m_Enemy.GetComponent<Enemy>();
             _Enemy.Pos = new Vector2Int(_x,_y);
             _Enemy.roomId = _r.id;

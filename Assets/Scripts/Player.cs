@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if(!IsSetup){
+        if(!IsSetup || !IsAlive){
             return;
         }
         if(GManger.instance.CurrentGameState != GameState.KeyInput ){
@@ -66,7 +66,6 @@ public class Player : MonoBehaviour
             GManger.instance.SetCurrentState(GameState.PlayerTurn);
             Vector2Int _ToPos = GetPosFromDirction(dir);
             var result = EnemyManager.instance.GetDirectionToEnemy(Pos,_ToPos);
-            Debug.Log("result.IsExist=" + result.IsExist);
             if(result.IsExist){
                 Attack(result.TargetEnemy);
                 return;
@@ -97,7 +96,9 @@ public class Player : MonoBehaviour
         }
     }
     public void Attack(Player _Enemy){
-
+        if(!IsAlive){
+            return;
+        }
         TargetEnemyList.Add(_Enemy);
 
         Vector2Int _FromPos = Pos;
@@ -134,18 +135,19 @@ public class Player : MonoBehaviour
             "delay", 0f,
             "oncomplete", "OnCompleteAttackTo"
         ));
-        if(GManger.instance.CurrentGameState == GameState.PlayerTurn){
-            GManger.instance.SetCurrentState(GameState.EnemyBegin);
-        }
-        if(GManger.instance.CurrentGameState == GameState.EnemyTurn){
-            EnemyManager.instance.EndAction();
-        }
+
         if(TargetEnemyList.Count > 0){
             foreach(Player _e in TargetEnemyList){
                 if(_e.HP <= 0){
                     _e.Dead();
                 }
             }
+        }
+        if(GManger.instance.CurrentGameState == GameState.PlayerTurn){
+            GManger.instance.SetCurrentState(GameState.EnemyBegin);
+        }
+        if(GManger.instance.CurrentGameState == GameState.EnemyTurn){
+            EnemyManager.instance.EndAction();
         }
     }
     public void OnCompleteAttackTo(){
@@ -183,6 +185,9 @@ public class Player : MonoBehaviour
     }
     public void Move(Vector2Int targetPosition)
     {
+        if(!IsAlive){
+            return;
+        }
         Debug.Log(gameObject.name+"...Move="+targetPosition);
         iTween.MoveTo(this.gameObject, iTween.Hash(
             "x", targetPosition.x,
@@ -199,12 +204,14 @@ public class Player : MonoBehaviour
     }
     public void Dead(){
         IsAlive = false;
-        Destroy(this.gameObject);
+        gameObject.SetActive (false);
+        // Destroy(this.gameObject);
     }
     public void OnCompleteMove(){
         if(GManger.instance.CurrentGameState == GameState.PlayerTurn){
             UpdateRoomID();
             GManger.instance.SetCurrentState(GameState.EnemyBegin);
+            Goal.instance.CheckGoal();
         }
         if(GManger.instance.CurrentGameState == GameState.EnemyTurn){
             EnemyManager.instance.EndAction();

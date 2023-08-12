@@ -12,9 +12,9 @@ TagManager:
   - Water
   - UI
   - 
+  - Floor
   - 
-  - 
-  - 
+  - Character
   - 
   - 
   - 
@@ -40,4 +40,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Stage
+    uniqueID: 4026798591
+    locked: 0
+  - name: Charactor
+    uniqueID: 1884574245
     locked: 0

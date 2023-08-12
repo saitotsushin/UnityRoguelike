@@ -18,6 +18,7 @@ public class GManger : MonoBehaviour
     public GameObject PlayerPrefab;
     public Player _Player;
     public GameState CurrentGameState; //現在のゲーム状態
+    public Transform parentLayer;
     void Awake()
     {
         // シングルトンの呪文
@@ -34,15 +35,19 @@ public class GManger : MonoBehaviour
     }
     void Start()
     {
-        _Map.GenerateMap();
-        GameObject _player = Instantiate(PlayerPrefab, new Vector3(0, 0, 0), new Quaternion());
+        GameObject _player = Instantiate(PlayerPrefab, new Vector3(0, 0, 0), new Quaternion(),parentLayer);
         _Player = _player.GetComponent<Player>();
+        Goal.instance.CreateGoal();
+        NextStage();
+
+    }
+    public void NextStage(){
+        _Map.GenerateMap();
         Realm _StartRealm = _Map.GetRandomRealm();
         _Player.SetStart(_StartRealm);
         FollowCamera.instance.SetCameta();
         EnemyManager.instance.CreateEnemy();
-        Goal.instance.CreateGoal();
-
+        Goal.instance.SetGoal();
     }
 
     //現在のゲームステータスを変更する関数　外部及び内部から

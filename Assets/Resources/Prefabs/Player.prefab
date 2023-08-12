@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 275570227550635126}
   - component: {fileID: 7913742527906772446}
   - component: {fileID: 6966304751554877140}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 5153603077373380632}
   - component: {fileID: 3086289685141195521}
   - component: {fileID: -6577059588382072660}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -170,8 +170,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1884574245
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
@@ -199,6 +199,13 @@ MonoBehaviour:
   _speed: 5
   Pos: {x: 0, y: 0}
   IsSetup: 0
+  dir: 3
+  roomId: 0
+  HP: 1
+  AK: 1
+  DF: 2
+  IsAlive: 1
+  TargetEnemyList: []
 --- !u!1 &5096076355584564605
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,7 +217,7 @@ GameObject:
   - component: {fileID: 8110758848032796928}
   - component: {fileID: 1896885590422743078}
   - component: {fileID: 9048844559707425644}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

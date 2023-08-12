@@ -33,47 +33,47 @@ public class Map : MonoBehaviour
     private int minRoomHeight = 4;    
     private int roomMinusRange = 3;//
     private int separateSize = 8;
-    private string[] colorArray = new string[]
-        {
-            "#B73500",
-            "#FF6464",
-            "#FF0055",
-            "#FF00B8",
-            "#C200FF",
-            "#5E00FF",
-            "#001EFF",
-            "#0088FF",
-            "#00F8FF",
-            "#00FF8E",
-            "#C6FF00",
-            "#B73500",
-            "#FF6464",
-            "#FF0055",    
-            "#B73500",
-            "#FF6464",
-            "#FF0055",
-            "#FF00B8",
-            "#C200FF",     
-            "#B73500",
-            "#FF6464",
-            "#FF0055",
-            "#FF00B8",
-            "#C200FF",
-            "#5E00FF",
-            "#001EFF",
-            "#0088FF",
-            "#00F8FF",
-            "#00FF8E",
-            "#C6FF00",
-            "#B73500",
-            "#FF6464",
-            "#FF0055",    
-            "#B73500",
-            "#FF6464",
-            "#FF0055",
-            "#FF00B8",
-            "#C200FF" 
-        };
+    // private string[] colorArray = new string[]
+    //     {
+    //         "#B73500",
+    //         "#FF6464",
+    //         "#FF0055",
+    //         "#FF00B8",
+    //         "#C200FF",
+    //         "#5E00FF",
+    //         "#001EFF",
+    //         "#0088FF",
+    //         "#00F8FF",
+    //         "#00FF8E",
+    //         "#C6FF00",
+    //         "#B73500",
+    //         "#FF6464",
+    //         "#FF0055",    
+    //         "#B73500",
+    //         "#FF6464",
+    //         "#FF0055",
+    //         "#FF00B8",
+    //         "#C200FF",     
+    //         "#B73500",
+    //         "#FF6464",
+    //         "#FF0055",
+    //         "#FF00B8",
+    //         "#C200FF",
+    //         "#5E00FF",
+    //         "#001EFF",
+    //         "#0088FF",
+    //         "#00F8FF",
+    //         "#00FF8E",
+    //         "#C6FF00",
+    //         "#B73500",
+    //         "#FF6464",
+    //         "#FF0055",    
+    //         "#B73500",
+    //         "#FF6464",
+    //         "#FF0055",
+    //         "#FF00B8",
+    //         "#C200FF" 
+    //     };
     void Awake()
     {
         // シングルトンの呪文
@@ -87,21 +87,31 @@ public class Map : MonoBehaviour
             // インスタンスが複数存在しないように、既に存在していたら自身を消去する
             Destroy(gameObject);
         }        
-        floorMap = new int[mapSizeY, mapSizeX];
-        maxWidth = (int)mapSizeX / 3 * 2;
-        maxHeight = (int)mapSizeY / 3 * 2;
-        //初期値
-        realms.Add(new Realm(0, 0, mapSizeX, mapSizeY));
+        // ResetMap();
         floorPrefab = Resources.Load("Prefabs/Floor") as GameObject;
         wallPrefab = Resources.Load("Prefabs/Wall") as GameObject;
         roadPrefab = Resources.Load("Prefabs/Road") as GameObject;
         floorInfoPrefab = Resources.Load("Prefabs/FloorInfo") as GameObject;
         roadAreaPrefab = Resources.Load("Prefabs/RoadArea") as GameObject;
-        floorMap = IntMap(floorMap);
+        
 
+    }
+    public void ResetMap(){
+        realms = new List<Realm>();
+        floorMap = new int[mapSizeY, mapSizeX];
+        maxWidth = (int)mapSizeX / 3 * 2;
+        maxHeight = (int)mapSizeY / 3 * 2;
+        //初期値
+        realms.Add(new Realm(0, 0, mapSizeX, mapSizeY));
+
+        floorMap = IntMap(floorMap);
+        
     }
     public void GenerateMap()
     {
+        ResetMap();
+        
+
         bool isGenarateMap = false;
         for (int i = 0; i < separateSize; i++)
         {
@@ -349,10 +359,10 @@ public class Map : MonoBehaviour
             for (int x = firstRealm.left; x < firstRealm.left + firstRealm.sizeX; x++){
                 _obj = Instantiate(wallPrefab, new Vector3(x, y, 0), new Quaternion(),parentRealms);      
                 _obj.GetComponent<BlockInfo>().SetPos(x,y);
-                spriteRenderer = _obj.GetComponent<SpriteRenderer>();              
+                // spriteRenderer = _obj.GetComponent<SpriteRenderer>();              
                 // 新しい色を作成する
-                Color newColor = ColorUtility.TryParseHtmlString(colorArray[testRealmsCount], out Color result) ? result : Color.white;
-                spriteRenderer.color = newColor; // 好みの色に変更する
+                // Color newColor = ColorUtility.TryParseHtmlString(colorArray[testRealmsCount], out Color result) ? result : Color.white;
+                // spriteRenderer.color = newColor; // 好みの色に変更する
                 test_creat_count++;
             }             
         }
@@ -362,10 +372,10 @@ public class Map : MonoBehaviour
             for (int x = secondRealm.left; x < secondRealm.left + secondRealm.sizeX; x++){
                 _obj = Instantiate(wallPrefab, new Vector3(x, y, 0), new Quaternion(),parentRealms);      
                 _obj.GetComponent<BlockInfo>().SetPos(x,y);
-                spriteRenderer = _obj.GetComponent<SpriteRenderer>();
+                // spriteRenderer = _obj.GetComponent<SpriteRenderer>();
                 // 新しい色を作成する
-                Color newColor = ColorUtility.TryParseHtmlString(colorArray[testRealmsCount], out Color result) ? result : Color.white;
-                spriteRenderer.color = newColor; // 好みの色に変更する   
+                // Color newColor = ColorUtility.TryParseHtmlString(colorArray[testRealmsCount], out Color result) ? result : Color.white;
+                // spriteRenderer.color = newColor; // 好みの色に変更する   
                 test_creat_count++;
             }           
         }

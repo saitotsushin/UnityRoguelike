@@ -7,6 +7,8 @@ public class Goal : MonoBehaviour
     public static Goal instance; // インスタンスの定義
     public Player _Player;
     public GameObject GoalPrefab;
+    public Vector2Int Pos = new Vector2Int(0,0);
+    public GameObject m_GoalPrefab;
     // Start is called before the first frame update
     void Awake()
     {
@@ -22,13 +24,20 @@ public class Goal : MonoBehaviour
             Destroy(gameObject);
         }  
     }
-
+    void Start(){
+    }
     // Update is called once per frame
     void Update()
     {
         
     }
-    public void CreateGoal(){
+    public void CreateGoal()
+    {
+        m_GoalPrefab = Instantiate(GoalPrefab, new Vector3(0f, 0.0f, 0.0f), new Quaternion());
+    }
+
+    public void SetGoal(){
+        Debug.Log("CreateGoal");
         _Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
         int roomId = GetRandomRoomId();
@@ -37,7 +46,13 @@ public class Goal : MonoBehaviour
         int _x = UnityEngine.Random.Range(_r.RoomLeft, _r.RoomRight + 1);
         int _y = UnityEngine.Random.Range(_r.RoomTop, _r.RoomBottom + 1);
         Vector3 _Pos = new Vector3(_x, _y, 0);
-        GameObject m_GoalPrefab = Instantiate(GoalPrefab, _Pos, new Quaternion());
+        Pos = new Vector2Int(_x, _y);
+        m_GoalPrefab.transform.position = _Pos;
+    }
+    public void CheckGoal(){
+        if(_Player.Pos.x == Pos.x && _Player.Pos.y == Pos.y){
+            GManger.instance.NextStage();
+        }
     }
     public int GetRandomRoomId(){
         List<Realm> _realms = Map.instance.realms;

@@ -70,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1884574245
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 0, g: 0.48289767, b: 0.8584906, a: 1}
@@ -99,6 +99,13 @@ MonoBehaviour:
   _speed: 5
   Pos: {x: 0, y: 0}
   IsSetup: 0
+  dir: 3
+  roomId: 0
+  HP: 1
+  AK: 1
+  DF: 2
+  IsAlive: 1
+  TargetEnemyList: []
 --- !u!114 &1490639624704034942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,3 +121,13 @@ MonoBehaviour:
   _speed: 5
   Pos: {x: 0, y: 0}
   IsSetup: 0
+  dir: 3
+  roomId: 0
+  HP: 1
+  AK: 1
+  DF: 2
+  IsAlive: 1
+  TargetEnemyList: []
+  _Player: {fileID: 0}
+  ActionState: 0
+  isChase: 0
