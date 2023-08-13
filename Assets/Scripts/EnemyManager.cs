@@ -12,11 +12,7 @@ public class EnemyManager : MonoBehaviour
 
     public List<Enemy> EnemyList;
     public Transform parentLayer;
-    public int ActionCount = 0;
-    // デリゲートの定義
-    public delegate void MyFunctionDelegate();
 
-    public List<MyFunctionDelegate> functionList = new List<MyFunctionDelegate>();
     void Awake()
     {
         // シングルトンの呪文
@@ -40,7 +36,25 @@ public class EnemyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(GManager.instance.CurrentGameState == GameState.EnemyTurn){
+            bool IsAction = IsActions();
+            if(!IsAction){
+                EndAction();            
+            }
+        }
+    }
+    private bool IsActions(){
+        bool CheckEndAction = false;
+        foreach (Enemy _e in EnemyList)
+        {
+            if(_e.IsAlive){
+                CheckEndAction = _e.IsInAction;
+                if(CheckEndAction){
+                    break;
+                }
+            }
+        }
+        return CheckEndAction;
     }
     public void CreateEnemy(){
         foreach(Enemy _e in EnemyList){
@@ -95,35 +109,17 @@ public class EnemyManager : MonoBehaviour
             }
         }
     }
-    public void EnemyActions(){
-        // デリゲートのリストを作成し、関数を追加
-        functionList = new List<MyFunctionDelegate>();
-        
+    public void EnemyActions(){        
         foreach (Enemy _e in EnemyList)
         {
             if(_e.IsAlive){
-                functionList.Add(_e.Action);
+                _e.Action();
             }
-        } 
-        if(functionList.Count == 0){
-            Debug.Log("functionList.Count=" + functionList.Count);
-            GManager.instance.SetCurrentState(GameState.TurnEnd);
-        }
-    }
-    public void ExecActions(){
-        // リスト内の関数を順に実行
-        foreach (var func in functionList) {
-            func();
         }
     }
     public void EndAction(){
-        ActionCount++;
-        if(functionList.Count == ActionCount){
-            Debug.Log("EndAction");
-            ActionCount = 0;
-            functionList = new List<MyFunctionDelegate>();
-            GManager.instance.SetCurrentState(GameState.TurnEnd);
-        }
+        Debug.Log("EndAction");
+        GManager.instance.SetCurrentState(GameState.TurnEnd);
     }
 
 }

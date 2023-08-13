@@ -25,13 +25,13 @@ public class Enemy : Player
         }
     }
     public void Action(){
-        // Vector2Int CheckPos = new Vector2Int(_Player.Pos.x - Pos.x,_Player.Pos.y - Pos.y);
+        IsInAction = true;
         var result = GetCanAttackPlayer(_Player.Pos);
         Vector2Int _ToPos = GetPosFromDirction(result.PlayerDirection);
 
         if(result.CanAttack)
         {
-            // Attack(_Player);
+            Attack(_Player);
         }else if (isChase)
         {
             Vector2Int MovePos = ChasePlayer();
@@ -40,11 +40,8 @@ public class Enemy : Player
                 Move(MovePos);
             }
         }else{
-            Wait();
+            IsInAction = false;
         }
-    }
-    public void Wait(){
-        EnemyManager.instance.EndAction();
     }
     public (bool CanAttack ,DIRECTION PlayerDirection) GetCanAttackPlayer(Vector2Int _PlayerPos)
     {

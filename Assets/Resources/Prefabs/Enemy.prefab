@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1490639624704034942}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Player
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,6 +105,7 @@ MonoBehaviour:
   DF: 2
   IsAlive: 1
   TargetEnemyList: []
+  IsInAction: 0
   _Player: {fileID: 0}
   ActionState: 0
   isChase: 0

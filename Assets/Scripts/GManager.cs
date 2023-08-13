@@ -75,14 +75,14 @@ public class GManager : MonoBehaviour
                 break;
 
             case GameState.EnemyTurn:
-                EnemyManager.instance.ExecActions();
+                // EnemyManager.instance.ExecActions();
                 // StartCoroutine("EnemyTurn");
                 break;
 
             case GameState.TurnEnd:
                 Debug.Log("TurnEnd");
                 if(!_Player.IsAlive){
-                    Debug.Log("Dead");
+                    Debug.Log("TurnEnd Dead");
                     GManager.instance.SetCurrentState(GameState.GameOver);
                 }else{
                     SetCurrentState(GameState.KeyInput);
