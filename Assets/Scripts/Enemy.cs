@@ -29,8 +29,9 @@ public class Enemy : Player
         var result = GetCanAttackPlayer(_Player.Pos);
         Vector2Int _ToPos = GetPosFromDirction(result.PlayerDirection);
 
-        if(result.CanAttack){
-            Attack(_Player);
+        if(result.CanAttack)
+        {
+            // Attack(_Player);
         }else if (isChase)
         {
             Vector2Int MovePos = ChasePlayer();

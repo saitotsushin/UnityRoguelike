@@ -51,7 +51,7 @@ public class Goal : MonoBehaviour
     }
     public void CheckGoal(){
         if(_Player.Pos.x == Pos.x && _Player.Pos.y == Pos.y){
-            GManger.instance.NextStage();
+            GManager.instance.NextStage();
         }
     }
     public int GetRandomRoomId(){

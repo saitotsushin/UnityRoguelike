@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -65,8 +66,10 @@ public class EnemyManager : MonoBehaviour
     }
     public bool IsExistEnemy(Vector2Int _NextPos){
         foreach(Enemy _e in EnemyList){
-            if(_e.Pos.x == _NextPos.x && _e.Pos.y == _NextPos.y){
-                return true;
+            if(_e.IsAlive){
+                if(_e.Pos.x == _NextPos.x && _e.Pos.y == _NextPos.y){
+                    return true;
+                }
             }
         }
         return false;        
@@ -98,10 +101,13 @@ public class EnemyManager : MonoBehaviour
         
         foreach (Enemy _e in EnemyList)
         {
-            functionList.Add(_e.Action);
+            if(_e.IsAlive){
+                functionList.Add(_e.Action);
+            }
         } 
         if(functionList.Count == 0){
-            GManger.instance.SetCurrentState(GameState.TurnEnd);
+            Debug.Log("functionList.Count=" + functionList.Count);
+            GManager.instance.SetCurrentState(GameState.TurnEnd);
         }
     }
     public void ExecActions(){
@@ -113,9 +119,11 @@ public class EnemyManager : MonoBehaviour
     public void EndAction(){
         ActionCount++;
         if(functionList.Count == ActionCount){
+            Debug.Log("EndAction");
             ActionCount = 0;
             functionList = new List<MyFunctionDelegate>();
-            GManger.instance.SetCurrentState(GameState.TurnEnd);
+            GManager.instance.SetCurrentState(GameState.TurnEnd);
         }
     }
+
 }

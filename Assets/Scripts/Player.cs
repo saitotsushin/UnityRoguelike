@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,8 +32,6 @@ public class Player : MonoBehaviour
 
     public List<Player> TargetEnemyList = new List<Player>();
 
-    // public bool IsActed = false;
-
     void Start()
     {
     }
@@ -46,7 +45,7 @@ public class Player : MonoBehaviour
         if(!IsSetup || !IsAlive){
             return;
         }
-        if(GManger.instance.CurrentGameState != GameState.KeyInput ){
+        if(GManager.instance.CurrentGameState != GameState.KeyInput ){
             return;
         }
         if (Input.GetKeyDown(KeyCode.W)){move.y = 1f;}
@@ -61,9 +60,10 @@ public class Player : MonoBehaviour
 
         bool isWall = Map.instance.CheckWall(checkTargetPos,Pos);
         bool isEnemy = EnemyManager.instance.IsExistEnemy(checkTargetPos);
+
         if (Input.GetKeyDown(KeyCode.E))
         {
-            GManger.instance.SetCurrentState(GameState.PlayerTurn);
+            GManager.instance.SetCurrentState(GameState.PlayerTurn);
             Vector2Int _ToPos = GetPosFromDirction(dir);
             var result = EnemyManager.instance.GetDirectionToEnemy(Pos,_ToPos);
             if(result.IsExist){
@@ -71,53 +71,64 @@ public class Player : MonoBehaviour
                 return;
             }
         }
-        if(isWall || isEnemy){
-            return;
-        }
 
         if (move != Vector2.zero)
         {
-            GManger.instance.SetCurrentState(GameState.PlayerTurn);
+            // Vector2Int SetPos = new Vector2Int(0, 0);
+            if(!isWall && !isEnemy){
+                GManager.instance.SetCurrentState(GameState.PlayerTurn);
+                Pos = new Vector2Int(Pos.x + (int)move.x, Pos.y + (int)move.y);
+            }
+            Vector2Int SetPos = new Vector2Int((int)move.x, (int)move.y);
 
-            // targetPos += new Vector3(move.x, move.y, 0) * distance;
-            Pos = new Vector2Int(Pos.x + (int)move.x, Pos.y + (int)move.y);
+            SetDirectionFromPos(SetPos);
             
-            if(move.x  < 0 && move.y == 0){ dir = DIRECTION.LEFT;}
-            if(move.x  > 0 && move.y == 0){ dir = DIRECTION.RIGHT;}
-            if(move.x == 0 && move.y  > 0){ dir = DIRECTION.TOP;}
-            if(move.x == 0 && move.y  < 0){ dir = DIRECTION.BOTTOM;}
-            if(move.x  > 0 && move.y  > 0){ dir = DIRECTION.RIGHT_TOP;}
-            if(move.x  > 0 && move.y  < 0){ dir = DIRECTION.RIGHT_BOTTOM;} 
-            if(move.x  < 0 && move.y  > 0){ dir = DIRECTION.LEFT_TOP;}
-            if(move.x  < 0 && move.y  < 0){ dir = DIRECTION.LEFT_BOTTOM;}
         }
-        if(GManger.instance.CurrentGameState == GameState.PlayerTurn){
+        if (isWall || isEnemy)
+        {
+            return;
+        }
+        if(GManager.instance.CurrentGameState == GameState.PlayerTurn){
             Move(checkTargetPos);
         }
     }
+    public void SetDirectionFromPos(Vector2Int Pos){
+        if(move.x  < 0 && move.y == 0){ dir = DIRECTION.LEFT;}
+        if(move.x  > 0 && move.y == 0){ dir = DIRECTION.RIGHT;}
+        if(move.x == 0 && move.y  > 0){ dir = DIRECTION.TOP;}
+        if(move.x == 0 && move.y  < 0){ dir = DIRECTION.BOTTOM;}
+        if(move.x  > 0 && move.y  > 0){ dir = DIRECTION.RIGHT_TOP;}
+        if(move.x  > 0 && move.y  < 0){ dir = DIRECTION.RIGHT_BOTTOM;} 
+        if(move.x  < 0 && move.y  > 0){ dir = DIRECTION.LEFT_TOP;}
+        if(move.x  < 0 && move.y  < 0){ dir = DIRECTION.LEFT_BOTTOM;}
+    }
     public void Attack(Player _Enemy){
-        if(!IsAlive){
-            return;
-        }
-        TargetEnemyList.Add(_Enemy);
+        // if(!IsAlive){
+        //     return;
+        // }
+        // TargetEnemyList.Add(_Enemy);
 
-        Vector2Int _FromPos = Pos;
-        Vector2Int _ToPos = _Enemy.Pos;
+        // Vector2Int _FromPos = Pos;
+        // Vector2Int _ToPos = _Enemy.Pos;
 
-        Debug.Log(gameObject.name+"...Attack");
-        FollowCamera.instance.RemoveFollowCamera();
-        Vector2 AttackPos = new Vector2(
-            _ToPos.x * 0.4f + _FromPos.x,
-            _ToPos.y * 0.4f + _FromPos.y
-        );
-        iTween.MoveTo(this.gameObject, iTween.Hash(
-            "x", AttackPos.x,
-            "y", AttackPos.y,
-            "time", 0.1f,
-            "delay", 0f,
-            // "easeType", iTween.EaseType.linear,
-            "oncomplete", "OnCompleteAttackFrom"
-        ));
+        // Debug.Log(gameObject.name+"...Attack="+_ToPos);
+        // FollowCamera.instance.RemoveFollowCamera();
+        // Vector2 DiffAttackPos = new Vector2(
+        //     _ToPos.x - _FromPos.x,
+        //     _ToPos.y - _FromPos.y
+        // );
+        // Vector2 AttackPos = new Vector2(
+        //     DiffAttackPos.x * 0.4f + _FromPos.x,
+        //     DiffAttackPos.y * 0.4f + _FromPos.y
+        // );
+        // iTween.MoveTo(this.gameObject, iTween.Hash(
+        //     "x", AttackPos.x,
+        //     "y", AttackPos.y,
+        //     "time", 0.1f,
+        //     "delay", 0f,
+        //     // "easeType", iTween.EaseType.linear,
+        //     "oncomplete", "OnCompleteAttackFrom"
+        // ));
 
         /*攻撃計算*/
         int Damage = _Enemy.DF - AK;
@@ -125,33 +136,47 @@ public class Player : MonoBehaviour
             Damage = 1;
         }
         _Enemy.HP -= Damage;
+        StartCoroutine(
+            DelayMethod(0.3f, () =>
+                {
+                    FollowCamera.instance.SetCameta();
+                    Debug.Log("TargetEnemyList.Count=" + TargetEnemyList.Count);
+                    if(TargetEnemyList.Count > 0){
+                        foreach(Player _e in TargetEnemyList){
+                            if(_e.HP <= 0){
+                                _e.Dead();
+                            }
+                        }
+                    }
+                    
+
+                    Debug.Log("GManager.instance.CurrentGameState="+GManager.instance.CurrentGameState);
+                    if(GManager.instance.CurrentGameState == GameState.PlayerTurn){
+                        Debug.Log("OnCompleteAttackTo1");
+                        GManager.instance.SetCurrentState(GameState.EnemyBegin);
+                    }
+                    if(GManager.instance.CurrentGameState == GameState.EnemyTurn){
+                        Debug.Log("OnCompleteAttackTo2");
+                        // EnemyManager.instance.EndAction();
+                    }
+                }
+            )
+        );
     }
     public void OnCompleteAttackFrom()
     {
-        iTween.MoveTo(this.gameObject, iTween.Hash(
-            "x", Pos.x,
-            "y", Pos.y,
-            "time", 0.1f,
-            "delay", 0f,
-            "oncomplete", "OnCompleteAttackTo"
-        ));
-
-        if(TargetEnemyList.Count > 0){
-            foreach(Player _e in TargetEnemyList){
-                if(_e.HP <= 0){
-                    _e.Dead();
-                }
-            }
-        }
-        if(GManger.instance.CurrentGameState == GameState.PlayerTurn){
-            GManger.instance.SetCurrentState(GameState.EnemyBegin);
-        }
-        if(GManger.instance.CurrentGameState == GameState.EnemyTurn){
-            EnemyManager.instance.EndAction();
-        }
+        // Debug.Log("OnCompleteAttackFrom");
+        // iTween.MoveTo(this.gameObject, iTween.Hash(
+        //     "x", Pos.x,
+        //     "y", Pos.y,
+        //     "time", 0.1f,
+        //     "delay", 0f,
+        //     "oncomplete", "OnCompleteAttackTo"
+        // ));
+        // iTween.Stop(gameObject);
     }
     public void OnCompleteAttackTo(){
-        FollowCamera.instance.SetCameta();
+
     }    
     public Vector2Int GetPosFromDirction(DIRECTION _dir){
         Vector2Int _CheckPos = new Vector2Int(0, 0);
@@ -188,7 +213,6 @@ public class Player : MonoBehaviour
         if(!IsAlive){
             return;
         }
-        Debug.Log(gameObject.name+"...Move="+targetPosition);
         iTween.MoveTo(this.gameObject, iTween.Hash(
             "x", targetPosition.x,
             "y", targetPosition.y,
@@ -208,13 +232,14 @@ public class Player : MonoBehaviour
         // Destroy(this.gameObject);
     }
     public void OnCompleteMove(){
-        if(GManger.instance.CurrentGameState == GameState.PlayerTurn){
+        if(GManager.instance.CurrentGameState == GameState.PlayerTurn){
             UpdateRoomID();
-            GManger.instance.SetCurrentState(GameState.EnemyBegin);
+            GManager.instance.SetCurrentState(GameState.EnemyBegin);
             Goal.instance.CheckGoal();
         }
-        if(GManger.instance.CurrentGameState == GameState.EnemyTurn){
-            EnemyManager.instance.EndAction();
+        if(GManager.instance.CurrentGameState == GameState.EnemyTurn){
+            Debug.Log("OnCompleteMove");
+            // EnemyManager.instance.EndAction();
         }        
         iTween.Stop(gameObject);
     }  
@@ -237,5 +262,10 @@ public class Player : MonoBehaviour
         Pos = new Vector2Int(_x, _y);
         roomId = _r.id;
         SetUp();
+    }
+    private IEnumerator DelayMethod(float waitTime, Action action)
+    {
+        yield return new WaitForSeconds(waitTime);
+        action();
     }
 }

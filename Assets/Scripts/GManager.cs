@@ -10,10 +10,11 @@ public enum GameState
     EnemyBegin, // エネミーターン開始
     EnemyTurn, //エネミーの行動中
     TurnEnd,   // ターン終了→KeyInputへ変遷
+    GameOver
 }
-public class GManger : MonoBehaviour
+public class GManager : MonoBehaviour
 {
-    public static GManger instance; // インスタンスの定義
+    public static GManager instance; // インスタンスの定義
     public Map _Map;
     public GameObject PlayerPrefab;
     public Player _Player;
@@ -48,6 +49,7 @@ public class GManger : MonoBehaviour
         FollowCamera.instance.SetCameta();
         EnemyManager.instance.CreateEnemy();
         Goal.instance.SetGoal();
+        OnGameStateChanged(GameState.KeyInput);
     }
 
     //現在のゲームステータスを変更する関数　外部及び内部から
@@ -78,6 +80,16 @@ public class GManger : MonoBehaviour
                 break;
 
             case GameState.TurnEnd:
+                Debug.Log("TurnEnd");
+                if(!_Player.IsAlive){
+                    Debug.Log("Dead");
+                    GManager.instance.SetCurrentState(GameState.GameOver);
+                }else{
+                    SetCurrentState(GameState.KeyInput);
+                }
+                break;
+            case GameState.GameOver:
+                UIManager.instance.GameOver();
                 SetCurrentState(GameState.KeyInput);
                 break;
         }

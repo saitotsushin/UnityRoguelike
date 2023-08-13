@@ -1,3 +1,4 @@
 {
-    "dotnet.defaultSolution": "UnityRoguelike.sln"
+    "dotnet.defaultSolution": "UnityRoguelike.sln",
+    "omnisharp.useModernNet": false,
 }
