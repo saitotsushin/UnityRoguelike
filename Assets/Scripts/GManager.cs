@@ -20,6 +20,8 @@ public class GManager : MonoBehaviour
     public Player _Player;
     public GameState CurrentGameState; //現在のゲーム状態
     public Transform parentLayer;
+    [SerializeField]
+    private int NowStageCount = 0;
     void Awake()
     {
         // シングルトンの呪文
@@ -43,12 +45,14 @@ public class GManager : MonoBehaviour
 
     }
     public void NextStage(){
+        NowStageCount++;
         _Map.GenerateMap();
         Realm _StartRealm = _Map.GetRandomRealm();
         _Player.SetStart(_StartRealm);
         FollowCamera.instance.SetCameta();
         EnemyManager.instance.CreateEnemy();
         Goal.instance.SetGoal();
+        UIManager.instance.Init(NowStageCount);
         OnGameStateChanged(GameState.KeyInput);
     }
 
@@ -80,9 +84,7 @@ public class GManager : MonoBehaviour
                 break;
 
             case GameState.TurnEnd:
-                Debug.Log("TurnEnd");
                 if(!_Player.IsAlive){
-                    Debug.Log("TurnEnd Dead");
                     GManager.instance.SetCurrentState(GameState.GameOver);
                 }else{
                     SetCurrentState(GameState.KeyInput);
@@ -90,6 +92,7 @@ public class GManager : MonoBehaviour
                 break;
             case GameState.GameOver:
                 UIManager.instance.GameOver();
+                NowStageCount = 0;
                 SetCurrentState(GameState.KeyInput);
                 break;
         }

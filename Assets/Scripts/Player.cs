@@ -25,6 +25,9 @@ public class Player : MonoBehaviour
 
     public DIRECTION dir =  DIRECTION.BOTTOM;
     public int roomId = 0;
+    private int BaseHP = 1;
+    private int BaseAK = 1;
+    private int BaseDF = 1;
     public int HP = 1;
     public int AK = 1;
     public int DF = 1;
@@ -40,6 +43,11 @@ public class Player : MonoBehaviour
     public void SetUp(){
         targetPos = transform.position;
         IsSetup = true;
+        HP = BaseHP;
+        AK = BaseAK;
+        DF = BaseDF;
+        IsAlive = true;
+        gameObject.SetActive (true);        
     }
 
     void Update()
@@ -113,7 +121,6 @@ public class Player : MonoBehaviour
         Vector2Int _FromPos = Pos;
         Vector2Int _ToPos = _Enemy.Pos;
 
-        Debug.Log(gameObject.name+"...Attack="+_ToPos);
         FollowCamera.instance.RemoveFollowCamera();
         Vector2 DiffAttackPos = new Vector2(
             _ToPos.x - _FromPos.x,
@@ -140,7 +147,6 @@ public class Player : MonoBehaviour
     }
     public void OnCompleteAttackFrom()
     {
-        Debug.Log("OnCompleteAttackFrom");
         iTween.MoveTo(this.gameObject, iTween.Hash(
             "x", Pos.x,
             "y", Pos.y,
@@ -150,9 +156,7 @@ public class Player : MonoBehaviour
         ));
         
     }
-    public void OnCompleteAttackTo(){
-        Debug.Log("OnCompleteAttackTo");
-        
+    public void OnCompleteAttackTo(){        
         FollowCamera.instance.SetCameta();
         if(TargetEnemyList.Count > 0){
             foreach(Player _e in TargetEnemyList){
@@ -167,6 +171,7 @@ public class Player : MonoBehaviour
         iTween.Stop(gameObject);
 
         IsInAction = false;
+        TargetEnemyList = new List<Player>();
     }    
     public Vector2Int GetPosFromDirction(DIRECTION _dir){
         Vector2Int _CheckPos = new Vector2Int(0, 0);
@@ -219,7 +224,6 @@ public class Player : MonoBehaviour
     public void Dead(){
         IsAlive = false;
         gameObject.SetActive (false);
-        // Destroy(this.gameObject);
     }
     public void OnCompleteMove(){
         if(gameObject.tag == "Player"){
@@ -252,9 +256,5 @@ public class Player : MonoBehaviour
         roomId = _r.id;
         SetUp();
     }
-    private IEnumerator DelayMethod(float waitTime, Action action)
-    {
-        yield return new WaitForSeconds(waitTime);
-        action();
-    }
+
 }

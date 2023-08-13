@@ -57,10 +57,11 @@ public class EnemyManager : MonoBehaviour
         return CheckEndAction;
     }
     public void CreateEnemy(){
-        foreach(Enemy _e in EnemyList){
-            Destroy(_e.gameObject);
-        }
-        EnemyList = new List<Enemy>();
+        DestroyChildAll(parentLayer);
+        // foreach(Enemy _e in EnemyList){
+        //     Destroy(_e.gameObject);
+        // }
+        
         _Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         List<Realm> _realms = Map.instance.realms;
         foreach(Realm _r in _realms){
@@ -77,6 +78,19 @@ public class EnemyManager : MonoBehaviour
             _Enemy.IsSetup = true;
             EnemyList.Add(_Enemy);
         }
+    }
+    private void DestroyChildAll(Transform root)
+    {
+        //自分の子供を全て調べる
+        foreach (Transform child in root)
+        {
+            //自分の子供をDestroyする
+            if(child.gameObject.tag == "Player"){
+                continue;
+            }
+            Destroy(child.gameObject);
+        }
+        EnemyList = new List<Enemy>();
     }
     public bool IsExistEnemy(Vector2Int _NextPos){
         foreach(Enemy _e in EnemyList){
@@ -118,7 +132,6 @@ public class EnemyManager : MonoBehaviour
         }
     }
     public void EndAction(){
-        Debug.Log("EndAction");
         GManager.instance.SetCurrentState(GameState.TurnEnd);
     }
 

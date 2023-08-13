@@ -37,7 +37,6 @@ public class Goal : MonoBehaviour
     }
 
     public void SetGoal(){
-        Debug.Log("CreateGoal");
         _Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
         int roomId = GetRandomRoomId();
