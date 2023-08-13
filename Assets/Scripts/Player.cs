@@ -213,7 +213,6 @@ public class Player : MonoBehaviour
             "y", targetPosition.y,
             "time", 0.1f,
             "delay", 0f,
-            // "easeType", iTween.EaseType.linear,
             "oncomplete", "OnCompleteMove",
             "oncompletetarget", gameObject
         ));
@@ -230,10 +229,12 @@ public class Player : MonoBehaviour
             UpdateRoomID();
             GManager.instance.SetCurrentState(GameState.EnemyBegin);
             Goal.instance.CheckGoal();
+            bool StepOnItem = ItemSpawn.instance.StepOnItem(Pos);
         }
         else{
             IsInAction = false;
         }        
+
         iTween.Stop(gameObject);
     }  
     public void UpdateRoomID(){

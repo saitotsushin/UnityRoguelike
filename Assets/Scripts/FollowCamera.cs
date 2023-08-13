@@ -23,11 +23,6 @@ public class FollowCamera : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        // player = playerObjct.GetComponent<Player>();
-    }
     public void SetCameta(){
         playerObjct = GameObject.FindGameObjectWithTag("Player");
         playerTransform = playerObjct.transform;

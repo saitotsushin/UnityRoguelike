@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DataBase;
 public enum GameState
 {
     // 開始
@@ -20,6 +20,7 @@ public class GManager : MonoBehaviour
     public Player _Player;
     public GameState CurrentGameState; //現在のゲーム状態
     public Transform parentLayer;
+    public ItemInstanceDataBaseManager _ItemInstanceDataBaseManager;
     [SerializeField]
     private int NowStageCount = 0;
     void Awake()
@@ -41,6 +42,7 @@ public class GManager : MonoBehaviour
         GameObject _player = Instantiate(PlayerPrefab, new Vector3(0, 0, 0), new Quaternion(),parentLayer);
         _Player = _player.GetComponent<Player>();
         Goal.instance.CreateGoal();
+        _ItemInstanceDataBaseManager.Create();
         NextStage();
 
     }
@@ -52,6 +54,7 @@ public class GManager : MonoBehaviour
         FollowCamera.instance.SetCameta();
         EnemyManager.instance.CreateEnemy();
         Goal.instance.SetGoal();
+        ItemSpawn.instance.CreateItem();
         UIManager.instance.Init(NowStageCount);
         OnGameStateChanged(GameState.KeyInput);
     }
@@ -70,7 +73,6 @@ public class GManager : MonoBehaviour
                 break;
 
             case GameState.PlayerTurn:
-                // StartCoroutine("PlayerTurn");
                 break;
 
             case GameState.EnemyBegin:
@@ -79,8 +81,6 @@ public class GManager : MonoBehaviour
                 break;
 
             case GameState.EnemyTurn:
-                // EnemyManager.instance.ExecActions();
-                // StartCoroutine("EnemyTurn");
                 break;
 
             case GameState.TurnEnd:

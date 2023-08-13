@@ -24,17 +24,6 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void Init(int _NowStageCount){
         UI_Gameover.SetActive(false);
         UI_NextStage.SetActive(true);

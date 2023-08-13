@@ -31,49 +31,8 @@ public class Map : MonoBehaviour
     private int maxHeight = 5;
     private int minRoomWidth = 4;
     private int minRoomHeight = 4;    
-    private int roomMinusRange = 3;//
+    private int roomMinusRange = 3;
     private int separateSize = 8;
-    // private string[] colorArray = new string[]
-    //     {
-    //         "#B73500",
-    //         "#FF6464",
-    //         "#FF0055",
-    //         "#FF00B8",
-    //         "#C200FF",
-    //         "#5E00FF",
-    //         "#001EFF",
-    //         "#0088FF",
-    //         "#00F8FF",
-    //         "#00FF8E",
-    //         "#C6FF00",
-    //         "#B73500",
-    //         "#FF6464",
-    //         "#FF0055",    
-    //         "#B73500",
-    //         "#FF6464",
-    //         "#FF0055",
-    //         "#FF00B8",
-    //         "#C200FF",     
-    //         "#B73500",
-    //         "#FF6464",
-    //         "#FF0055",
-    //         "#FF00B8",
-    //         "#C200FF",
-    //         "#5E00FF",
-    //         "#001EFF",
-    //         "#0088FF",
-    //         "#00F8FF",
-    //         "#00FF8E",
-    //         "#C6FF00",
-    //         "#B73500",
-    //         "#FF6464",
-    //         "#FF0055",    
-    //         "#B73500",
-    //         "#FF6464",
-    //         "#FF0055",
-    //         "#FF00B8",
-    //         "#C200FF" 
-    //     };
     void Awake()
     {
         // シングルトンの呪文
@@ -86,8 +45,7 @@ public class Map : MonoBehaviour
         {
             // インスタンスが複数存在しないように、既に存在していたら自身を消去する
             Destroy(gameObject);
-        }        
-        // ResetMap();
+        }
         floorPrefab = Resources.Load("Prefabs/Floor") as GameObject;
         wallPrefab = Resources.Load("Prefabs/Wall") as GameObject;
         roadPrefab = Resources.Load("Prefabs/Road") as GameObject;
@@ -234,7 +192,6 @@ public class Map : MonoBehaviour
 
     }
     public Realm GetRandomRealm(){
-        // Realm newRealm = new Realm();
         int maxCount = realms.Count;
         int randomNumber = UnityEngine.Random.Range(0, maxCount);
         return realms[randomNumber];
@@ -359,10 +316,6 @@ public class Map : MonoBehaviour
             for (int x = firstRealm.left; x < firstRealm.left + firstRealm.sizeX; x++){
                 _obj = Instantiate(wallPrefab, new Vector3(x, y, 0), new Quaternion(),parentRealms);      
                 _obj.GetComponent<BlockInfo>().SetPos(x,y);
-                // spriteRenderer = _obj.GetComponent<SpriteRenderer>();              
-                // 新しい色を作成する
-                // Color newColor = ColorUtility.TryParseHtmlString(colorArray[testRealmsCount], out Color result) ? result : Color.white;
-                // spriteRenderer.color = newColor; // 好みの色に変更する
                 test_creat_count++;
             }             
         }
@@ -371,11 +324,7 @@ public class Map : MonoBehaviour
         for (int y = secondRealm.top; y < secondRealm.top + secondRealm.sizeY; y++){
             for (int x = secondRealm.left; x < secondRealm.left + secondRealm.sizeX; x++){
                 _obj = Instantiate(wallPrefab, new Vector3(x, y, 0), new Quaternion(),parentRealms);      
-                _obj.GetComponent<BlockInfo>().SetPos(x,y);
-                // spriteRenderer = _obj.GetComponent<SpriteRenderer>();
-                // 新しい色を作成する
-                // Color newColor = ColorUtility.TryParseHtmlString(colorArray[testRealmsCount], out Color result) ? result : Color.white;
-                // spriteRenderer.color = newColor; // 好みの色に変更する   
+                _obj.GetComponent<BlockInfo>().SetPos(x,y);  
                 test_creat_count++;
             }           
         }

@@ -20,9 +20,6 @@ public class Enemy : Player
     }
     void Update()
     {
-        if(!IsSetup){
-            return;
-        }
     }
     public void Action(){
         IsInAction = true;

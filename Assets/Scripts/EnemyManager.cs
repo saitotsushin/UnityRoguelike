@@ -27,11 +27,7 @@ public class EnemyManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
 
     // Update is called once per frame
     void Update()
@@ -57,12 +53,9 @@ public class EnemyManager : MonoBehaviour
         return CheckEndAction;
     }
     public void CreateEnemy(){
-        DestroyChildAll(parentLayer);
-        // foreach(Enemy _e in EnemyList){
-        //     Destroy(_e.gameObject);
-        // }
-        
+        DestroyChildAll(parentLayer);        
         _Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        
         List<Realm> _realms = Map.instance.realms;
         foreach(Realm _r in _realms){
             int _x = UnityEngine.Random.Range(_r.RoomLeft, _r.RoomRight + 1);
@@ -70,6 +63,7 @@ public class EnemyManager : MonoBehaviour
             if(_x == _Player.Pos.x && _y == _Player.Pos.y){
                 continue;
             }
+            
             Vector3 _Pos = new Vector3(_x, _y, 0);
             GameObject m_Enemy = Instantiate(EnemyPrefab, _Pos, new Quaternion(),parentLayer);
             Enemy _Enemy = m_Enemy.GetComponent<Enemy>();

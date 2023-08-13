@@ -24,13 +24,6 @@ public class Goal : MonoBehaviour
             Destroy(gameObject);
         }  
     }
-    void Start(){
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void CreateGoal()
     {
         m_GoalPrefab = Instantiate(GoalPrefab, new Vector3(0f, 0.0f, 0.0f), new Quaternion());

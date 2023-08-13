@@ -25,15 +25,4 @@ public class RoadInfo : MonoBehaviour
         this.endY   = _c.endY;
         this.direction = _c.direction;
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
