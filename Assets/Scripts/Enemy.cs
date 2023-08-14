@@ -8,7 +8,7 @@ public enum ACTION
     MOVE,
     ATTACK
 }
-public class Enemy : Player
+public class Enemy : Character
 {
     public Player _Player;
     public ACTION ActionState = ACTION.WAIT;
@@ -75,4 +75,9 @@ public class Enemy : Player
         if(_Pos.x  < 0 && _Pos.y  < 0){ _dir = DIRECTION.LEFT_BOTTOM;}
         return _dir;
     }
+    protected override void OnCompleteMove(){
+        IsInAction = false;
+
+        iTween.Stop(gameObject);
+    }  
 }
