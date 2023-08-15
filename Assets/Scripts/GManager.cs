@@ -21,6 +21,7 @@ public class GManager : MonoBehaviour
     public GameState CurrentGameState; //現在のゲーム状態
     public Transform parentLayer;
     public ItemInstanceDataBaseManager _ItemInstanceDataBaseManager;
+    public EnemyInstanceDataBaseManager _EnemyInstanceDataBaseManager;
     [SerializeField]
     private int NowStageCount = 0;
     void Awake()
@@ -43,6 +44,8 @@ public class GManager : MonoBehaviour
         _Player = _player.GetComponent<Player>();
         Goal.instance.CreateGoal();
         _ItemInstanceDataBaseManager.Create();
+        _EnemyInstanceDataBaseManager.Create();
+        HpBar.instance.SetStatus(_Player.HP);
         NextStage();
 
     }

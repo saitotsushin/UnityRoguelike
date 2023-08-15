@@ -201,11 +201,13 @@ MonoBehaviour:
   IsSetup: 0
   dir: 3
   roomId: 0
-  HP: 1
-  AK: 1
-  DF: 2
+  HP: 10
+  AK: 2
+  DF: 1
   IsAlive: 1
+  CharaName: 
   TargetEnemyList: []
+  IsInAction: 0
 --- !u!1 &5096076355584564605
 GameObject:
   m_ObjectHideFlags: 0

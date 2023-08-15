@@ -23,13 +23,14 @@ public class Character : MonoBehaviour
 
     public DIRECTION dir =  DIRECTION.BOTTOM;
     public int roomId = 0;
-    private int BaseHP = 1;
-    private int BaseAK = 1;
-    private int BaseDF = 1;
-    public int HP = 1;
+    public int BaseHP = 10;
+    public int BaseAK = 1;
+    public int BaseDF = 1;
+    public int HP = 10;
     public int AK = 1;
     public int DF = 1;
     public bool IsAlive = true;
+    public string CharaName;
 
     public List<Character> TargetEnemyList = new List<Character>();
 
@@ -91,7 +92,13 @@ public class Character : MonoBehaviour
             Damage = 1;
         }
         _Enemy.HP -= Damage;
+
+        // UpdateStatus(_Enemy.HP,_Enemy.BaseHP);
+        HpBar.instance.CalcStatus();
+        
     }
+    protected virtual void UpdateStatus(int _Hp, int _BaseHp){
+    }  
     public void OnCompleteAttackFrom()
     {
         iTween.MoveTo(this.gameObject, iTween.Hash(

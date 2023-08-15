@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DataBase;
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager instance; // インスタンスの定義
@@ -67,11 +67,20 @@ public class EnemyManager : MonoBehaviour
             Vector3 _Pos = new Vector3(_x, _y, 0);
             GameObject m_Enemy = Instantiate(EnemyPrefab, _Pos, new Quaternion(),parentLayer);
             Enemy _Enemy = m_Enemy.GetComponent<Enemy>();
-            _Enemy.Pos = new Vector2Int(_x,_y);
+            SetUpData(_Enemy,1, new Vector2Int(_x,_y));
             _Enemy.roomId = _r.id;
-            _Enemy.IsSetup = true;
+            
             EnemyList.Add(_Enemy);
         }
+    }
+    private void SetUpData(Enemy _Enemy,int _EnemyId, Vector2Int _Pos){
+        _Enemy.Pos = _Pos;
+        _Enemy.IsSetup = true;
+        EnemyInstanceData _EnemyInstanceData = EnemyInstanceDataBaseManager.instance.GetItem(_EnemyId);
+        _Enemy.CharaName = _EnemyInstanceData.EnemyName;
+        _Enemy.HP = _EnemyInstanceData.HP;
+        _Enemy.AK = _EnemyInstanceData.AK;
+        _Enemy.DF = _EnemyInstanceData.DF;
     }
     private void DestroyChildAll(Transform root)
     {
