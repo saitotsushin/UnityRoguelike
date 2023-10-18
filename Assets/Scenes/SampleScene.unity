@@ -709,6 +709,7 @@ GameObject:
   - component: {fileID: 256474060}
   - component: {fileID: 256474059}
   - component: {fileID: 256474061}
+  - component: {fileID: 256474062}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -759,6 +760,18 @@ MonoBehaviour:
   parentRoad: {fileID: 272468587}
   parentFoolorInfo: {fileID: 1376779749}
   setId: 0
+--- !u!114 &256474062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256474058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49c1adc22b56b4b70b53a45941ff3c4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &272468586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1123,6 +1136,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd68f75bfe97b434d86d5ce017238fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerObjct: {fileID: 0}
+  playerTransform: {fileID: 0}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0

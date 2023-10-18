@@ -34,7 +34,8 @@ public class Goal : MonoBehaviour
 
         int roomId = GetRandomRoomId();
         List<Realm> _realms = Map.instance.realms;
-        Realm _r = Map.instance.getRealmFromId(_realms,roomId);
+        MapUtil MapUtil = new MapUtil();
+        Realm _r = MapUtil.getRealmFromId(_realms,roomId);
         int _x = UnityEngine.Random.Range(_r.RoomLeft, _r.RoomRight + 1);
         int _y = UnityEngine.Random.Range(_r.RoomTop, _r.RoomBottom + 1);
         Vector3 _Pos = new Vector3(_x, _y, 0);

@@ -6,8 +6,8 @@ public class FollowCamera : MonoBehaviour
 {
      public static FollowCamera instance; // インスタンスの定義
     // Player player;
-    GameObject playerObjct;
-    Transform playerTransform;
+    public GameObject playerObjct;
+    public Transform playerTransform;
     bool isFollow = true;
     void Awake()
     {

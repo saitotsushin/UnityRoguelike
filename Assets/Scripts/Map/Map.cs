@@ -21,7 +21,7 @@ public class Map : MonoBehaviour
     public int[,] floorMap;
     public int setId = 0;
     public List<Realm> realms = new List<Realm>();
-    public List<connect> connects = new List<connect>();
+    public List<Connect> connects = new List<Connect>();
 
     private int testRealmsCount = 0;//後で消す
     private int minArea = 60;
@@ -33,6 +33,8 @@ public class Map : MonoBehaviour
     private int minRoomHeight = 4;    
     private int roomMinusRange = 3;
     private int separateSize = 8;
+
+    private MapUtil _MapUtil;
     void Awake()
     {
         // シングルトンの呪文
@@ -51,8 +53,7 @@ public class Map : MonoBehaviour
         roadPrefab = Resources.Load("Prefabs/Road") as GameObject;
         floorInfoPrefab = Resources.Load("Prefabs/FloorInfo") as GameObject;
         roadAreaPrefab = Resources.Load("Prefabs/RoadArea") as GameObject;
-        
-
+        _MapUtil = new MapUtil();
     }
     public void ResetMap(){
         realms = new List<Realm>();
@@ -69,7 +70,6 @@ public class Map : MonoBehaviour
     {
         ResetMap();
         
-
         bool isGenarateMap = false;
         for (int i = 0; i < separateSize; i++)
         {
@@ -92,12 +92,12 @@ public class Map : MonoBehaviour
         foreach(Realm _r in realms){
             for (int i = 0; i < _r.adjacentIDs.Count;i++){
                 int ToId = _r.adjacentIDs[i];
-                addConnect(_r, getRealmFromId(realms,ToId));
+                addConnect(_r, _MapUtil.getRealmFromId(realms,ToId));
             }
         }
         MakeRoad();
-        DebugMap(floorMap);
-        DebugRealms(realms);        
+        MapDebug.instance.DebugMap(floorMap);
+        MapDebug.instance.DebugRealms(realms,mapSizeX,mapSizeY);        
 
     }
     private void CheckLoad(){
@@ -105,7 +105,7 @@ public class Map : MonoBehaviour
         List<int> notConnectIdList = new List<int>();
         foreach (Realm _r in realms)
         {
-            foreach (connect _c in connects)
+            foreach (Connect _c in connects)
             {
                 if(_c.fromId == _r.id || _c.toId == _r.id){
                     connectIdList.Add(_r.id);
@@ -124,7 +124,7 @@ public class Map : MonoBehaviour
     }
     private void RemoveMinRoom(){
         List<Realm> newRealms = new List<Realm>();
-        List<connect> newConnect = new List<connect>();
+        List<Connect> newConnect = new List<Connect>();
         List<int> RemoveIds = new List<int>();
         foreach(Realm _r in realms){
             if(_r.roomSizeX >= minRoomWidth && _r.roomSizeY >= minRoomHeight){
@@ -134,7 +134,7 @@ public class Map : MonoBehaviour
                 RemoveIds.Add(_r.id);
             }
         }
-        foreach (connect _c in connects)
+        foreach (Connect _c in connects)
         {
             bool ContainFromId = RemoveIds.Contains(_c.fromId);
             bool ContainToId = RemoveIds.Contains(_c.toId);
@@ -154,7 +154,7 @@ public class Map : MonoBehaviour
 	*
 	**/
     public void addConnect (Realm fromRealm, Realm toRealm) {
-        connect _connect = new connect();
+        Connect _connect = new Connect();
         connects.Add(_connect);
         connects[connects.Count - 1].SetRealm(fromRealm, toRealm);
     }
@@ -168,8 +168,8 @@ public class Map : MonoBehaviour
             }
             _r.connectID = new_connectID;
         }
-        List<connect> new_connects = new List<connect>();
-        foreach(connect _c in connects){
+        List<Connect> new_connects = new List<Connect>();
+        foreach(Connect _c in connects){
             if(_c.fromId != _id && _c.toId != _id){
                 new_connects.Add(_c);
             }
@@ -184,7 +184,7 @@ public class Map : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (connect _c in connects)
+        foreach (Connect _c in connects)
         {
             bool IsAlreadyConnected = checkAlreadyConnected(_c);
             drawConnect(_c);
@@ -196,9 +196,9 @@ public class Map : MonoBehaviour
         int randomNumber = UnityEngine.Random.Range(0, maxCount);
         return realms[randomNumber];
     }
-    public bool checkAlreadyConnected(connect c){
+    public bool checkAlreadyConnected(Connect c){
         bool isConnected = false;
-        foreach (connect _c in connects)
+        foreach (Connect _c in connects)
         {
             if(_c.fromId == c.toId && _c.toId == c.fromId){
                 if(_c.isConnected){
@@ -208,7 +208,7 @@ public class Map : MonoBehaviour
         }
         return isConnected;
     }
-    public void drawConnect (connect c) {
+    public void drawConnect (Connect c) {
         if(c.isConnected){
             return;
         }
@@ -339,32 +339,7 @@ public class Map : MonoBehaviour
         }
         return new_realms;
     }
-    private void DebugRealms(List<Realm> _realms){
-        int[,] checkArr = new int[mapSizeY, mapSizeX];
-        for (int y = 0; y < checkArr.GetLength(0); y++)
-        {
-            for (int x = 0; x < checkArr.GetLength(1); x++){
-                checkArr[y, x] = 0;
-            }
-        }
-        foreach(Realm r in _realms){
-            for (int y = r.top; y < r.top + r.sizeY; y++){
-                for (int x = r.left; x < r.left + r.sizeX; x++)
-                {
-                    checkArr[y, x] = r.id;
-                }
-            }
-        }
-        string logs = "";
-        for (int y = 0; y < checkArr.GetLength(0); y++)
-        {
-            for (int x = 0; x < checkArr.GetLength(1); x++){
-                logs += checkArr[y, x]+",";
-            }
-            logs += "\n";
-        }
-        Debug.Log(logs);
-    }
+
     public int[,] IntMap(int[,] _map)
     {
         int[,] newMap = new int[mapSizeY, mapSizeX];
@@ -377,29 +352,16 @@ public class Map : MonoBehaviour
         }
         return newMap;
     }
-    public void DebugMap(int[,] _map)
-    {
-        string logs = "";
-        for (int y = 0; y < _map.GetLength(0); y++)
-        {
-            for (int x = 0; x < _map.GetLength(1); x++)
-            {
-                logs += _map[y, x]+",";
-            }
-            logs += "\n";
-        }
-        Debug.Log(logs);
-    }
     private bool separateLargestRealm(){
         int index = 0;
 
-        index = getIndexOfLargestRealm();
+        index = _MapUtil.getIndexOfLargestRealm(realms);
 
         bool isSeparate = false;
 
         if (index >= 0) {
          
-            Realm r = getRealmFromId(realms,index);
+            Realm r = _MapUtil.getRealmFromId(realms,index);
             if (r.sizeX >= r.sizeY) {
             
                 isSeparate = separateRealmByX(index);
@@ -420,7 +382,7 @@ public class Map : MonoBehaviour
         int minWidthByArea = 0;
         int separateX;
 
-        Realm r = getRealmFromId(realms,id);
+        Realm r = _MapUtil.getRealmFromId(realms,id);
 
         minWidthByArea = (int)Math.Floor((double)minArea / r.sizeY);
         separateX = 0;
@@ -458,7 +420,7 @@ public class Map : MonoBehaviour
         int minHeightByArea = 0;
         int separateY;
 
-        Realm r = getRealmFromId(realms,id);
+        Realm r = _MapUtil.getRealmFromId(realms,id);
 
         minHeightByArea = (int)Math.Floor((double)minArea / r.sizeX);
         separateY = 0;
@@ -491,51 +453,8 @@ public class Map : MonoBehaviour
         return true;
 		
     }
-    /** 最大面積の領域のインデックスを取得. */
-    private int getIndexOfLargestRealm() {
 
-        int i;
-        int maxIndex,
-            area,
-            maxArea;
 
-        Realm r;
-
-        maxIndex = 0;
-        area = 0;
-        maxArea = 0;
-
-        if (realms.Count == 0) { return -1; }
-        
-        for (i = 0; i < realms.Count; i += 1) {
-
-            r = realms[i];
-            area = r.sizeX * r.sizeY;
-
-            if (area > maxArea) {
-
-                maxArea = area;
-                maxIndex = r.id;
-
-            }
-
-        }
-
-        return maxIndex;
-
-    }
-    public Realm getRealmFromId(List<Realm> _realms, int _id)
-    {
-        // int GetId = 0;
-        Realm _RectBox = null;
-        for (int i = 0; i < _realms.Count; i += 1)
-        {
-            if(_realms[i].id == _id){
-                _RectBox = _realms[i];
-            }
-        }
-        return _RectBox;
-    }
     public void MakeRoom(){
         //一旦子要素は全て削除
         for (int i = parentFoolorInfo.childCount - 1; i >= 0; i--)
@@ -687,7 +606,7 @@ public class Map : MonoBehaviour
         Realm target;
 
         // touchingRealms = [];
-        target = getRealmFromId(realms,index);
+        target = _MapUtil.getRealmFromId(realms,index);
 
         for (i = 0; i < realms.Count; i += 1) {
                 if (isAdjacent(target, realms[i])) {
@@ -739,149 +658,3 @@ public class Map : MonoBehaviour
         return false;
     }
 }
-public class Realm
-{
-
-    public int sizeX= 0;
-    public int sizeY= 0;
-    public int left = 0;
-    public int top = 0;
-    public int right = 0;
-    public int bottom = 0;
-    public int id = 0;
-    public int RoomLeft = 0;
-    public int RoomRight = 0;
-    public int RoomTop = 0;
-    public int RoomBottom = 0;
-    public int roomSizeX = 0;
-    public int roomSizeY = 0;
-    public List<int> connectID = new List<int>();//接続ID
-    public List<int> adjacentIDs = new List<int>();//隣接ID
-
-    public Realm(int _left, int _top, int _sizeX,int _sizeY)
-    {
-        this.left = _left;
-        this.top = _top;
-        this.sizeX = _sizeX;
-        this.sizeY = _sizeY;
-		this.right = _left + _sizeX - 1;
-		this.bottom = _top + _sizeY - 1;        
-        
-    }
-    //コンストラクタが呼び出し初期化
-    public Realm() : this(0, 0, 0, 0) {}
-    public void setRoom(int _left, int _top, int _width, int _height){
-        this.RoomLeft = _left;
-        this.RoomTop = _top;
-        this.RoomRight = _left + _width - 1;//-1にする？
-        this.RoomBottom = _top + _height - 1;//-1にする？
-		this.roomSizeX = _width;
-        this.roomSizeY = _height;       
-    }
-	/** 部屋の通路を開くため、右端・左端を除くY座標の範囲からランダムに１つの値を取得する.
-	 *  
-	 * @return	右端・左端を除くX座標の範囲から選ばれたランダムの値
-	 *
-	 **/
-	public int getRandomPointX() {
-        int left = this.RoomLeft + 1;
-        int right = this.RoomLeft + this.roomSizeX - 2;
-        return UnityEngine.Random.Range(left,right + 1);		
-	}
-	
-	/** 部屋の通路を開くため、上端・下端を除くY座標の範囲からランダムに１つの値を取得する.
-	 *  
-	 * @return	上端・下端を除くY座標の範囲から選ばれたランダムの値
-	 *
-	 **/
-	public int getRandomPointY() {
-        int top = this.RoomTop + 1;
-        int bottom = this.RoomTop + this.roomSizeY - 2;
-        return UnityEngine.Random.Range(top, bottom + 1);
-    }
-}
-/** 接続のクラス */
-public class connect {
-
-    public int id = 0;
-    public int fromId = 0;
-    public int toId = 0;
-    public int startX = 0;
-    public int startY = 0;
-    public int middle = 0;
-    // public int dir = 0;
-    public int endX = 0;
-    public int endY = 0;
-    public int direction = 0;
-    public bool isConnected = false;
-    //  directionは↓が0、→が1、↑が2、←が3。
-    //  middleだけ進んだところで折れる
-
-    /** 接続を追加する
-	*
-    * @param	startRealm	始点の領域
-	* @param	endRealm	終点の領域
-	*
-	**/
-    public void SetRealm(Realm startRealm, Realm endRealm) {
-        
-        this.fromId = startRealm.id;
-        this.toId = endRealm.id;
-        //  接続元・接続先を記録
-
-        //directionは↓が0、→が1、↑が2、←が3。
-        //0：下、1:右、2:上、3：左
-        
-        //左に存在する
-        if (startRealm.left == endRealm.right + 1) {
-
-            this.startX = startRealm.RoomLeft - 1;// - 1?
-            this.startY = startRealm.getRandomPointY();
-            this.endX = endRealm.RoomRight+ 1;
-            this.endY = endRealm.getRandomPointY();
-            this.middle = startRealm.RoomLeft - startRealm.left - 1;
-            this.direction = 3;
-
-            return;
-
-        }
-		//右に存在する
-        if (endRealm.left == startRealm.right + 1) {
-
-            this.startX = startRealm.RoomRight + 1;//+1？
-            this.startY = startRealm.getRandomPointY();
-            this.endX = endRealm.RoomLeft - 1;
-            this.endY = endRealm.getRandomPointY();
-            this.middle = startRealm.right - startRealm.RoomRight;
-            this.direction = 1;
-            return;
-            
-        }
-		//下に存在する
-        if (startRealm.top == endRealm.bottom + 1) {
-
-            this.startX = startRealm.getRandomPointX();
-            this.startY = startRealm.RoomTop - 1;
-            this.endX = endRealm.getRandomPointX();
-            this.endY = endRealm.RoomBottom + 1;
-            this.middle = startRealm.RoomTop - startRealm.top;
-            this.direction = 0;
-            return;
-            
-        }
-		//上に存在する
-        if (endRealm.top == startRealm.bottom + 1) {
-
-            this.startX = startRealm.getRandomPointX();
-            this.startY = startRealm.RoomBottom + 1;// + 1?
-            this.endX = endRealm.getRandomPointX();
-            this.endY = endRealm.RoomTop - 1;
-            this.middle = startRealm.bottom - startRealm.RoomBottom - 1;
-            this.direction = 2;
-            return;
-
-        }
-        
-    }
-    
-};

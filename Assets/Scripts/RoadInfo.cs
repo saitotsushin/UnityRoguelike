@@ -14,7 +14,7 @@ public class RoadInfo : MonoBehaviour
     public int endX = 0;
     public int endY = 0;
     public int direction = 0;
-    public void SetStatus(connect _c){
+    public void SetStatus(Connect _c){
         this.id     = _c.id;
         this.fromId = _c.fromId;
         this.toId   = _c.toId;

@@ -39,15 +39,9 @@ public class HpBar : MonoBehaviour
         MaxHP = _HP;
     }
     public void CalcStatus(){
-        // int NowHP = int.Parse(TextHP.text);
-        // int SetHP = NowHP - _Point;
-        // TextHP.text = SetHP.ToString();
 
         Player _Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        Debug.Log("_Player.HP=" + _Player.HP);
-        Debug.Log("_Player.BaseHP=" + _Player.BaseHP);
         float ParHP = (float)_Player.HP / _Player.BaseHP;
-        Debug.Log("ParHP=" + ParHP);
 
         TextHP.text = _Player.HP.ToString();
 
